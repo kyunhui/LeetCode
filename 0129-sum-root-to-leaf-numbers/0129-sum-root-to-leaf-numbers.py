@@ -6,51 +6,21 @@
 #         self.right = right
 
 class Solution:
-    def isLeaf(self, node):
-        if node.left or node.right:
-            return False
-        else:
-            return True
-        
-    def sumStack(self, stack):
-        depth = len(stack)-1
-        sum = 0
-        
-        for i in stack:
-            sum += i.val * 10**depth
-            depth -= 1
-            
-        return sum 
-    
     def sumNumbers(self, root: Optional[TreeNode]) -> int:
+        self.sum = 0
+        self.dfs(root, '0')
         
-        answer = 0
-        stack = [root]
-        current = root 
+        return self.sum 
+    
+    def dfs(self, node, num : str):
+        if node.left == None and node.right == None:
+            self.sum += int(num + str(node.val))
+            return 
         
-        while True:
+        if node.left != None:
+            self.dfs(node.left, num+str(node.val))
             
-            while not(self.isLeaf(current)):
-                if not(current.left):
-                    tmp = current.right
-                    current.right = None
-                else:
-                    tmp = current.left
-                    current.left = None
-                    
-                current = tmp 
-                stack.append(current)
-            
-            
-            answer += self.sumStack(stack)
-            
-            while self.isLeaf(current):
-                
-                if not(len(stack)):
-                    return answer
-                
-                current = stack.pop()
-                
-            stack.append(current)
+        if node.right != None:
+            self.dfs(node.right, num+str(node.val))
                   
                 
