@@ -1,32 +1,22 @@
 class Solution:
-    def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
-        graph = defaultdict(list)
-
-        for u, v, w in times:
-            graph[u].append((v, w))
-
-        q = []
-        heapq.heappush(q, (0, k))
-
-        distance = [float('inf')] * (n+1)
-        distance[k] = 0
-
-        while q:
-            cost, node = heapq.heappop(q)
-
-            if distance[node] < cost:
-                continue
-
-            for v, w in graph[node]:
-                if cost + w < distance[v]:
-                    temp = cost + w
-                    distance[v] = temp 
-                    heapq.heappush(q, (temp, v))
-
-        answer = max(distance[1:])
+    def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:        
+        adj_list = defaultdict(list)
         
-        if answer == float('inf'):
-            return -1
+        for x,y,w in times:
+            adj_list[x].append((w, y))
         
-        return answer
+        visited=set()
+        heap = [(0, k)]
         
+        while heap:
+            travel_time, node = heapq.heappop(heap)
+            visited.add(node)
+            
+            if len(visited)==n:
+                return travel_time
+            
+            for time, adjacent_node in adj_list[node]:
+                if adjacent_node not in visited:
+                    heapq.heappush(heap, (travel_time+time, adjacent_node))
+                
+        return -1
